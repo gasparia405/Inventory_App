@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 
 import com.example.android.inventory_app.sampledata.InventoryContract.InventoryEntry;
@@ -125,6 +126,14 @@ public class InventoryViewerActivity extends AppCompatActivity implements Loader
     }
 
     // TODO: Create private deleteAllInventory function
+
+    /**
+     * Helper method to delete all pets in the database.
+     */
+    private void deleteAllInventory() {
+        int rowsDeleted = getContentResolver().delete(InventoryEntry.CONTENT_URI, null, null);
+        Log.v("InventoryViewerActivity", rowsDeleted + " rows deleted from pet database");
+    }
 
     // TODO: Create onCreateOptionsMenu function to inflate menu
 
