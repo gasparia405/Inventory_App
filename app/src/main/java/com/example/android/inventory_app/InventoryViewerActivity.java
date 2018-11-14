@@ -5,13 +5,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 
 
 import com.example.android.inventory_app.sampledata.InventoryContract.InventoryEntry;
 import com.example.android.inventory_app.sampledata.InventoryOpenHelper;
 
-public class MainActivity extends AppCompatActivity {
+public class InventoryViewerActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private InventoryOpenHelper mDbHelper;
 
@@ -19,16 +20,29 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // TODO: Set content view to activity_inventory_viewer layout
+
+        // TODO: Set up Floating Action Button (FAB) to open the EditorActivity
+
+        // TODO: Find ListView for setting up CursorAdapter
+
+        // TODO: Set view to empty view
+
+        // TODO: Initialize CursorAdapter and set adapter to ListView
+
+        // TODO: Set onItemClickListener to open EditorActivity and send item info over
+
         mDbHelper = new InventoryOpenHelper(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        // TODO: Once CursorAdapter is set up, we don't need displayDatabaseInfo anymore
         displayDatabaseInfo();
     }
 
-    // Insert data into the database
+    // Insert data into the database via Insert Dummy Data menu option
     private void insertData() {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
@@ -39,11 +53,14 @@ public class MainActivity extends AppCompatActivity {
         values.put(InventoryEntry.COLUMN_ITEM_SUPPLIER, "Nabisco");
         values.put(InventoryEntry.COLUMN_ITEM_SUPPLIER_NUMBER, "413-566-2668");
 
+        // TODO: Once ContentProvider is set up, change this to
+        // Uri newUri = getContentResolver().insert(ContentUri, values)
         long newRowId = db.insert(InventoryEntry.TABLE_NAME, null, values);
 
     }
 
     // Read info from the database
+    // TODO: delete once ContentProvider is set up
     private void displayDatabaseInfo() {
         // Create readable database instance
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
@@ -106,4 +123,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    // TODO: Create private deleteAllInventory function
+
+    // TODO: Create onCreateOptionsMenu function to inflate menu
+
+    // TODO: Create onOptionsItemSelected with switch statement
+    // to choose what happens when menu items are clicked
+
+    // TODO: onCreateLoader method once CursorLoader is created
+
+    // TODO: onLoadFinished method
+
+    // TODO: onLoaderReset method
 }
+
