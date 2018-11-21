@@ -1,14 +1,24 @@
 package com.example.android.inventory_app;
 
+import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.CursorLoader;
+import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.support.design.widget.FloatingActionButton;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 
 import com.example.android.inventory_app.sampledata.InventoryContract.InventoryEntry;
@@ -54,9 +64,8 @@ public class InventoryViewerActivity extends AppCompatActivity implements Loader
         values.put(InventoryEntry.COLUMN_ITEM_SUPPLIER, "Nabisco");
         values.put(InventoryEntry.COLUMN_ITEM_SUPPLIER_NUMBER, "413-566-2668");
 
-        // TODO: Once ContentProvider is set up, change this to
-        // Uri newUri = getContentResolver().insert(ContentUri, values)
-        long newRowId = db.insert(InventoryEntry.TABLE_NAME, null, values);
+        Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
+
 
     }
 
@@ -140,10 +149,30 @@ public class InventoryViewerActivity extends AppCompatActivity implements Loader
     // TODO: Create onOptionsItemSelected with switch statement
     // to choose what happens when menu items are clicked
 
-    // TODO: onCreateLoader method once CursorLoader is created
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projection = {
+                InventoryEntry.COLUMN_ITEM_ID,
+                InventoryEntry.COLUMN_ITEM_PRODUCT,
+                InventoryEntry.COLUMN_ITEM_PRICE
+        };
 
-    // TODO: onLoadFinished method
+        return new CursorLoader(this,
+                InventoryEntry.CONTENT_URI,   // The content URI of the words table
+                projection,             // The columns to return for each row
+                null,                   // Selection criteria
+                null,                   // Selection criteria
+                null);
+    }
 
-    // TODO: onLoaderReset method
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
 }
 
