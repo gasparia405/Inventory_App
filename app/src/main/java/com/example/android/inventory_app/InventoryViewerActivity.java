@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.support.design.widget.FloatingActionButton;
 
 
 import com.example.android.inventory_app.sampledata.InventoryContract.InventoryEntry;
@@ -20,11 +21,10 @@ public class InventoryViewerActivity extends AppCompatActivity implements Loader
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // TODO: Set content view to activity_inventory_viewer layout
+        setContentView(R.layout.activity_inventory_viewer);
 
         // TODO: Set up Floating Action Button (FAB) to open the EditorActivity
-
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         // TODO: Find ListView for setting up CursorAdapter
 
         // TODO: Set view to empty view

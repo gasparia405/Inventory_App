@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".InventoryViewerActivity"
             android:label="@string/store_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,6 +19,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".EditorActivity"></activity>
+        <provider
+            android:name=".sampledata.InventoryProvider"
+            android:authorities="com.example.android.pets"
+            android:exported="false" />
     </application>
+
 
 </manifest>

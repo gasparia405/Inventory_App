@@ -80,10 +80,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             getLoaderManager().initLoader(EXISTING_ITEM_LOADER, null, null);
         }
 
-        mProductEditText = findViewById(R.id.edit_product_name);
-        mPriceEditText = findViewById(R.id.edit_product_price);
-        mQuantityEditText = findViewById(R.id.edit_product_quantity);
-        mSupplierEditText = findViewById(R.id.edit_product_supplier_name);
+        mProductEditText = (EditText) findViewById(R.id.edit_product_name);
+        mPriceEditText = (EditText) findViewById(R.id.edit_product_price);
+        mQuantityEditText = (EditText) findViewById(R.id.edit_product_quantity);
+        mSupplierEditText = (EditText) findViewById(R.id.edit_product_supplier_name);
 
         // Setup OnTouchListeners on all the input fields, so we can determine if the user
         // has touched or modified them. This will let us know if there are unsaved changes
@@ -401,5 +401,5 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         alertDialog.show();
     }
 
-    
+
 }
