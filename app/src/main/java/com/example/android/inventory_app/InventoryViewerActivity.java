@@ -88,7 +88,7 @@ public class InventoryViewerActivity extends AppCompatActivity implements Loader
     }
 
     /**
-     * Helper method to delete all pets in the database.
+     * Helper method to delete all items in the database.
      */
     private void deleteAllInventory() {
         int rowsDeleted = getContentResolver().delete(InventoryEntry.CONTENT_URI, null, null);
@@ -124,7 +124,10 @@ public class InventoryViewerActivity extends AppCompatActivity implements Loader
         String[] projection = {
                 InventoryEntry.COLUMN_ITEM_ID,
                 InventoryEntry.COLUMN_ITEM_PRODUCT,
-                InventoryEntry.COLUMN_ITEM_PRICE
+                InventoryEntry.COLUMN_ITEM_PRICE,
+                InventoryEntry.COLUMN_ITEM_QUANTITY,
+                InventoryEntry.COLUMN_ITEM_SUPPLIER,
+                InventoryEntry.COLUMN_ITEM_SUPPLIER_NUMBER
         };
 
         return new CursorLoader(this,

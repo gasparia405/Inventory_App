@@ -40,19 +40,19 @@ public class InventoryCursorAdapter extends CursorAdapter {
 
         // Find the columns of pet attributes that we're interested in
         int nameColumnIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_ITEM_PRODUCT);
-//        int quantityColumnIndex = cursor.getColumnIndexOrThrow(InventoryContract.InventoryEntry.COLUMN_ITEM_QUANTITY);
+        int quantityColumnIndex = cursor.getColumnIndexOrThrow(InventoryContract.InventoryEntry.COLUMN_ITEM_QUANTITY);
 
         // Read the pet attributes from the Cursor for the current pet
         String itemName = cursor.getString(nameColumnIndex);
-//        String itemQuantity = cursor.getString(quantityColumnIndex);
+        String itemQuantity = cursor.getString(quantityColumnIndex);
 
         // If the pet breed is empty string or null, then use some default text
         // that says "Unknown breed", so the TextView isn't blank.
-//        if (TextUtils.isEmpty(itemQuantity)) {
-//            itemQuantity = "0";
-//        }
+        if (TextUtils.isEmpty(itemQuantity)) {
+            itemQuantity = "0";
+        }
 
-        String itemQuantity = "0";
+
 
         // Update the TextViews with the attributes for the current pet
         nameTextView.setText(itemName);

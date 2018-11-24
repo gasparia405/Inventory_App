@@ -73,7 +73,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         } else {
             setTitle(R.string.editor_activity_title_edit_item);
 
-            getLoaderManager().initLoader(EXISTING_ITEM_LOADER, null, null);
+            getLoaderManager().initLoader(EXISTING_ITEM_LOADER, null, this);
         }
 
         mProductEditText = (EditText) findViewById(R.id.edit_product_name);
