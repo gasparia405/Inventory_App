@@ -7,7 +7,6 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,47 +19,66 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-
 import com.example.android.inventory_app.sampledata.InventoryContract.InventoryEntry;
-import com.example.android.inventory_app.sampledata.InventoryOpenHelper;
 
 public class InventoryViewerActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private InventoryOpenHelper mDbHelper;
+    private static final int ITEM_LOADER = 0;
+
+    InventoryCursorAdapter mInventoryCursorAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory_viewer);
 
-        // TODO: Set up Floating Action Button (FAB) to open the EditorActivity
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        // TODO: Find ListView for setting up CursorAdapter
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(InventoryViewerActivity.this, EditorActivity.class);
+                startActivity(intent);
+            }
+        });
 
-        // TODO: Set view to empty view
+        ListView inventoryView = (ListView) findViewById(R.id.stock_list);
 
-        // TODO: Initialize CursorAdapter and set adapter to ListView
+        View emptyView = findViewById(R.id.empty_view);
+        inventoryView.setEmptyView(emptyView);
 
-        // TODO: Set onItemClickListener to open EditorActivity and send item info over
+        mInventoryCursorAdapter = new InventoryCursorAdapter(this,null);
 
-        mDbHelper = new InventoryOpenHelper(this);
+        // Attach PetCursorAdapter to the ListView
+        inventoryView.setAdapter(mInventoryCursorAdapter);
+
+        inventoryView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Intent intent = new Intent(InventoryViewerActivity.this, EditorActivity.class);
+
+                Uri currentPetUri = ContentUris.withAppendedId(InventoryEntry.CONTENT_URI, id);
+
+                intent.setData(currentPetUri);
+
+                startActivity(intent);
+            }
+        });
+
+        getLoaderManager().initLoader(ITEM_LOADER, null, this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        // TODO: Once CursorAdapter is set up, we don't need displayDatabaseInfo anymore
-        displayDatabaseInfo();
     }
 
     // Insert data into the database via Insert Dummy Data menu option
     private void insertData() {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(InventoryEntry.COLUMN_ITEM_PRODUCT, "Oreos");
         values.put(InventoryEntry.COLUMN_ITEM_PRICE, 3);
-        values.put(InventoryEntry.COLUMN_ITEM_QUANTITY, 20);
+        values.put(InventoryEntry.COLUMN_ITEM_QUANTITY, "20");
         values.put(InventoryEntry.COLUMN_ITEM_SUPPLIER, "Nabisco");
         values.put(InventoryEntry.COLUMN_ITEM_SUPPLIER_NUMBER, "413-566-2668");
 
@@ -68,73 +86,6 @@ public class InventoryViewerActivity extends AppCompatActivity implements Loader
 
 
     }
-
-    // Read info from the database
-    // TODO: delete once ContentProvider is set up
-    private void displayDatabaseInfo() {
-        // Create readable database instance
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
-
-        // Create projection that defines what we want to read from the database
-        String[] projection = {
-                InventoryEntry.COLUMN_ITEM_ID,
-                InventoryEntry.COLUMN_ITEM_PRODUCT,
-                InventoryEntry.COLUMN_ITEM_PRICE,
-                InventoryEntry.COLUMN_ITEM_QUANTITY,
-                InventoryEntry.COLUMN_ITEM_SUPPLIER,
-                InventoryEntry.COLUMN_ITEM_SUPPLIER_NUMBER
-        };
-
-        // Create Cursor object to read from the database
-        Cursor cursor = db.query(
-                InventoryEntry.TABLE_NAME,
-                projection,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-
-        try {
-            String tableHeader =
-                    InventoryEntry.COLUMN_ITEM_ID + " - " +
-                            InventoryEntry.COLUMN_ITEM_PRODUCT + " - " +
-                            InventoryEntry.COLUMN_ITEM_PRICE + " - " +
-                            InventoryEntry.COLUMN_ITEM_QUANTITY + " - " +
-                            InventoryEntry.COLUMN_ITEM_SUPPLIER + " - " +
-                            InventoryEntry.COLUMN_ITEM_SUPPLIER_NUMBER + "\n";
-
-            int idColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_ITEM_ID);
-            int productColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_ITEM_PRODUCT);
-            int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_ITEM_PRICE);
-            int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_ITEM_QUANTITY);
-            int supplierColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_ITEM_SUPPLIER);
-            int supplierNumberColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_ITEM_SUPPLIER_NUMBER);
-
-            while (cursor.moveToNext()) {
-                int currentID = cursor.getInt(idColumnIndex);
-                String currentProduct = cursor.getString(productColumnIndex);
-                int currentPrice = cursor.getInt(priceColumnIndex);
-                int currentQuantity = cursor.getInt(quantityColumnIndex);
-                String currentSupplier = cursor.getString(supplierColumnIndex);
-                String currentSupplierNumber = cursor.getString(supplierNumberColumnIndex);
-
-                String currentItemString = "\n" + currentID + " - " +
-                        currentProduct + " - " +
-                        currentPrice + " - " +
-                        currentQuantity + " - " +
-                        currentSupplier + " - " +
-                        currentSupplierNumber;
-            }
-
-        } finally {
-            cursor.close();
-        }
-
-    }
-
-    // TODO: Create private deleteAllInventory function
 
     /**
      * Helper method to delete all pets in the database.
@@ -144,10 +95,29 @@ public class InventoryViewerActivity extends AppCompatActivity implements Loader
         Log.v("InventoryViewerActivity", rowsDeleted + " rows deleted from pet database");
     }
 
-    // TODO: Create onCreateOptionsMenu function to inflate menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu options from the res/menu/menu_catalog.xml file.
+        // This adds menu items to the app bar.
+        getMenuInflater().inflate(R.menu.menu_viewer, menu);
+        return true;
+    }
 
-    // TODO: Create onOptionsItemSelected with switch statement
-    // to choose what happens when menu items are clicked
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // User clicked on a menu option in the app bar overflow menu
+        switch (item.getItemId()) {
+            // Respond to a click on the "Insert dummy data" menu option
+            case R.id.action_insert_dummy_data:
+                insertData();
+                return true;
+            // Respond to a click on the "Delete all entries" menu option
+            case R.id.action_delete_all_entries:
+                deleteAllInventory();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -167,12 +137,12 @@ public class InventoryViewerActivity extends AppCompatActivity implements Loader
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
+        mInventoryCursorAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        mInventoryCursorAdapter.swapCursor(null);
     }
 }
 

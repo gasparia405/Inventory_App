@@ -25,7 +25,7 @@
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="#2B3D4D"  />
     <TextView
-        android:id="@+id/item_inventory"
+        android:id="@+id/item_quantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"

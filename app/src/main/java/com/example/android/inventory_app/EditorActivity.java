@@ -15,15 +15,11 @@ import android.support.v4.app.NavUtils;
 import android.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.android.inventory_app.sampledata.InventoryContract;
@@ -96,26 +92,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu options from the res/menu/menu_editor.xml file.
-        // This adds menu items to the app bar.
-        if (mCurrentItemUri == null) {
-            // This is a new pet, so change the app bar to say "Add a Pet"
-            setTitle(getString(R.string.editor_activity_title_new_item));
 
-            // Invalidate the options menu, so the "Delete" menu option can be hidden.
-            // (It doesn't make sense to delete a pet that hasn't been created yet.)
-            invalidateOptionsMenu();
-        } else {
-            getMenuInflater().inflate(R.menu.menu_editor, menu);
-        }
+        getMenuInflater().inflate(R.menu.menu_editor, menu);
         return true;
     }
 
     private void saveItem() {
         String productString = mProductEditText.getText().toString().trim();
-        String priceString = mProductEditText.getText().toString().trim();
-        String quantityString = mProductEditText.getText().toString().trim();
-        String supplierString = mProductEditText.getText().toString().trim();
+        String priceString = mPriceEditText.getText().toString().trim();
+        String quantityString = mQuantityEditText.getText().toString().trim();
+        String supplierString = mSupplierEditText.getText().toString().trim();
 
 
         // Check if this is supposed to be a new pet
@@ -198,7 +184,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 finish();
                 return true;
             // Respond to a click on the "Delete" menu option
-            case R.id.action_delete:
+            case R.id.action_deleter:
                 // Show delete confirmation dialog
                 showDeleteConfirmationDialog();
 
@@ -237,7 +223,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         super.onPrepareOptionsMenu(menu);
         // If this is a new pet, hide the "Delete" menu item.
         if (mCurrentItemUri == null) {
-            MenuItem menuItem = menu.findItem(R.id.action_delete);
+            MenuItem menuItem = menu.findItem(R.id.action_deleter);
             menuItem.setVisible(false);
         }
         return true;

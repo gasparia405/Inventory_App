@@ -10,7 +10,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<!-- Layout for the list of pets -->
+<!-- Layout for the list of items -->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -19,7 +19,7 @@
     tools:context=".InventoryViewerActivity">
 
     <ListView
-        android:id="@+id/pet_list"
+        android:id="@+id/stock_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

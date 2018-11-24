@@ -10,20 +10,19 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<!-- Options menu for the EditorActivity -->
+<!-- Options menu for the CatalogActivity -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".EditorActivity">
+    tools:context=".InventoryViewerActivity">
 
     <item
-        android:id="@+id/action_save"
-        android:title="@string/action_save"
-        app:showAsAction="ifRoom"/>
+        android:id="@+id/action_insert_dummy_data"
+        android:title="@string/action_insert_dummy_data"
+        app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_deleter"
-        android:title="@string/action_delete"
-        app:showAsAction="collapseActionView"
-        app:actionViewClass="android.support.v7.view.menu.ActionMenuItemView"/>
+        android:id="@+id/action_delete_all_entries"
+        android:title="@string/action_delete_all_entries"
+        app:showAsAction="never" />
 </menu>
