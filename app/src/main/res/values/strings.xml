@@ -75,4 +75,8 @@
     <!-- Dialog button text for the option to cancel deletion of the current pet [CHAR LIMIT=20] -->
     <string name="cancel">Cancel</string>
 
+    <string name="dollar_sign">$</string>
+
+    <string name="quantity_statement"> in stock</string>
+
 </resources>
