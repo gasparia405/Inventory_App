@@ -79,4 +79,8 @@
 
     <string name="quantity_statement"> in stock</string>
 
+    <string name="sale_button">Sale</string>
+
+    <string name="decrement_quantity_error">Item quantity can\'t go lower</string>
+
 </resources>

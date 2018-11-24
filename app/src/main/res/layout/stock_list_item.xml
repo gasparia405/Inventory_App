@@ -15,6 +15,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="100dp"
     android:orientation="vertical"
     android:padding="@dimen/activity_margin">
     <TextView
@@ -45,5 +46,10 @@
             android:fontFamily="sans-serif"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="#AEB6BD"  />
+        <Button
+            android:id="@+id/sale_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
     </LinearLayout>
 </LinearLayout>

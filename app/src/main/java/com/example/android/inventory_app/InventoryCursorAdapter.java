@@ -1,13 +1,19 @@
 package com.example.android.inventory_app;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.inventory_app.sampledata.InventoryContract;
 
@@ -33,7 +39,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
      *                correct row.
      */
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, final Cursor cursor) {
         // Find individual views that we want to modify in the list item layout
         TextView nameTextView = (TextView) view.findViewById(R.id.item_name);
         TextView priceTextView = (TextView) view.findViewById(R.id.item_price);
@@ -59,5 +65,36 @@ public class InventoryCursorAdapter extends CursorAdapter {
         nameTextView.setText(itemName);
         priceTextView.setText(itemPrice);
         quantityTextView.setText(itemQuantity);
+
+        Button saleButton = (Button) view.findViewById(R.id.sale_button);
+        saleButton.setText(R.string.sale_button);
+        saleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int columnIdIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_ITEM_ID);
+                int quantityIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_ITEM_QUANTITY);
+                String col= cursor.getString(columnIdIndex);
+                String quan= cursor.getString(quantityIndex);
+                decreaseQuantity(context, Integer.valueOf(col), Integer.valueOf(quan));
+            }
+        });
+    }
+
+    private void decreaseQuantity(Context context, int columnId, int quantity) {
+
+        if (quantity > 0) {
+            quantity--;
+        } else {
+            Toast.makeText(context,
+                    context.getResources().getString(R.string.decrement_quantity_error),
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(InventoryContract.InventoryEntry.COLUMN_ITEM_QUANTITY, quantity);
+
+        Uri updateUri = ContentUris.withAppendedId(InventoryContract.InventoryEntry.CONTENT_URI, columnId);
+
+        int rowsAffected = context.getContentResolver().update(updateUri, contentValues, null, null);
     }
 }
