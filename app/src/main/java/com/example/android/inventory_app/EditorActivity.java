@@ -19,7 +19,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.inventory_app.sampledata.InventoryContract;
@@ -34,7 +37,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mPriceEditText;
 
     /** EditText field to enter the item's quantity */
-    private EditText mQuantityEditText;
+    private LinearLayout mQuantityContainer;
+
+    private TextView mQuantityTextView;
+
+    private int mQuantity = 0;
+
+    private Button mAddButton;
+
+    private Button mSubtractButton;
 
     /** EditText field to enter the item's supplier */
     private EditText mSupplierEditText;
@@ -78,7 +89,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         mProductEditText = (EditText) findViewById(R.id.edit_product_name);
         mPriceEditText = (EditText) findViewById(R.id.edit_product_price);
-        mQuantityEditText = (EditText) findViewById(R.id.edit_product_quantity);
+        mQuantityContainer = (LinearLayout) findViewById(R.id.quantity_container);
+        mQuantityTextView = (TextView) findViewById(R.id.product_quantity);
+
+        mAddButton = (Button) findViewById(R.id.add_button);
+        mAddButton.setText("+");
+
+        mSubtractButton = (Button) findViewById(R.id.subtract_button);
+        mSubtractButton.setText("-");
+
         mSupplierEditText = (EditText) findViewById(R.id.edit_product_supplier_name);
 
         // Setup OnTouchListeners on all the input fields, so we can determine if the user
@@ -86,8 +105,58 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // or not, if the user tries to leave the editor without saving.
         mProductEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
-        mQuantityEditText.setOnTouchListener(mTouchListener);
+        mQuantityContainer.setOnTouchListener(mTouchListener);
         mSupplierEditText.setOnTouchListener(mTouchListener);
+
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                String productQuantityString = mQuantityTextView.getText().toString();
+                final int productQuantity;
+
+                if (productQuantityString != "") {
+                    productQuantity= Integer.parseInt(productQuantityString);
+                } else {
+                    productQuantity = 0;
+                }
+
+                if (mQuantityTextView == null) {
+                    mQuantity = 0;
+                    mQuantity = incrementQuantity(mQuantity);
+                    mQuantityTextView.setText(String.valueOf(mQuantity));
+                } else {
+                    mQuantity = productQuantity;
+                    mQuantity = incrementQuantity(mQuantity);
+                    mQuantityTextView.setText(String.valueOf(mQuantity));
+                }
+            }
+        });
+        mSubtractButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String productQuantityString = mQuantityTextView.getText().toString();
+                final int productQuantity;
+
+                if (productQuantityString != "") {
+                    productQuantity= Integer.parseInt(productQuantityString);
+                } else {
+                    productQuantity = 0;
+                }
+
+                if (mQuantityTextView == null) {
+                    mQuantity = 0;
+                    mQuantity = decrementQuantity(mQuantity);
+                    mQuantityTextView.setText(String.valueOf(mQuantity));
+                } else {
+                    mQuantity = productQuantity;
+                    mQuantity = decrementQuantity(mQuantity);
+                    mQuantityTextView.setText(String.valueOf(mQuantity));
+                }
+
+
+            }
+        });
     }
 
     @Override
@@ -100,7 +169,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private void saveItem() {
         String productString = mProductEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
-        String quantityString = mQuantityEditText.getText().toString().trim();
+        String quantityString = mQuantityTextView.getText().toString().trim();
         String supplierString = mSupplierEditText.getText().toString().trim();
 
 
@@ -344,7 +413,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Update the views on the screen with the values from the database
             mProductEditText.setText(name);
             mPriceEditText.setText(Integer.toString(price));
-            mQuantityEditText.setText(Integer.toString(quantity));
+            mQuantityTextView.setText(Integer.toString(quantity));
             mSupplierEditText.setText(supplier);
         }
     }
@@ -354,7 +423,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // If the loader is invalidated, clear out all the data from the input fields.
         mProductEditText.setText("");
         mPriceEditText.setText("");
-        mQuantityEditText.setText("");
+        mQuantityTextView.setText("");
         mSupplierEditText.setText("");
     }
 
@@ -385,6 +454,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    private int incrementQuantity(int quantity) {
+        quantity += 1;
+        return quantity;
+    }
+
+    private int decrementQuantity(int quantity) {
+        quantity -= 1;
+        return quantity;
     }
 
 

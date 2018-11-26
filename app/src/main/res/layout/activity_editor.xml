@@ -72,12 +72,28 @@
             android:layout_width="0dp"
             android:layout_weight="2"
             android:orientation="vertical">
-            <!-- Breed field -->
-            <EditText
-                android:id="@+id/edit_product_quantity"
-                style="@style/EditorFieldStyle"
-                android:hint="@string/hint_product_quantity"
-                android:inputType="textCapWords" />
+            <!--  field -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/quantity_container">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/subtract_button"
+                    />
+                <TextView
+                    android:id="@+id/product_quantity"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/add_button"
+                    />
+            </LinearLayout>
+
 
             <EditText
                 android:id="@+id/edit_product_supplier_name"
