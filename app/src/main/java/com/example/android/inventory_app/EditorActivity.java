@@ -50,6 +50,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     /** EditText field to enter the item's supplier */
     private EditText mSupplierEditText;
 
+    /** EditText field to enter the item's supplier */
+    private EditText mSupplierNumberEditText;
+
     /** Boolean flag to track if item has been edited */
     private boolean mItemHasChanged;
 
@@ -99,6 +102,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSubtractButton.setText("-");
 
         mSupplierEditText = (EditText) findViewById(R.id.edit_product_supplier_name);
+        mSupplierNumberEditText = (EditText) findViewById(R.id.edit_product_supplier_number);
 
         // Setup OnTouchListeners on all the input fields, so we can determine if the user
         // has touched or modified them. This will let us know if there are unsaved changes
@@ -107,9 +111,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPriceEditText.setOnTouchListener(mTouchListener);
         mQuantityContainer.setOnTouchListener(mTouchListener);
         mSupplierEditText.setOnTouchListener(mTouchListener);
+        mSupplierNumberEditText.setOnTouchListener(mTouchListener);
 
         mAddButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 String productQuantityString = mQuantityTextView.getText().toString();
@@ -132,6 +136,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 }
             }
         });
+
         mSubtractButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,8 +162,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     mQuantity = decrementQuantity(mQuantity);
                     mQuantityTextView.setText(String.valueOf(mQuantity));
                 }
-
-
             }
         });
     }
@@ -175,24 +178,25 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String priceString = mPriceEditText.getText().toString().trim();
         String quantityString = mQuantityTextView.getText().toString().trim();
         String supplierString = mSupplierEditText.getText().toString().trim();
+        String supplierNumberString = mSupplierNumberEditText.getText().toString().trim();
 
 
-        // Check if this is supposed to be a new pet
+        // Check if this is supposed to be a new item
         // and check if all the fields in the editor are blank
         if (mCurrentItemUri == null &&
                 TextUtils.isEmpty(productString) && TextUtils.isEmpty(priceString) &&
                 TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(supplierString)) {
-            // Since no fields were modified, we can return early without creating a new pet.
+            // Since no fields were modified, we can return early without creating a new item.
             // No need to create ContentValues and no need to do any ContentProvider operations.
             return;
         }
 
         // Create a ContentValues object where column names are the keys,
-        // and pet attributes from the editor are the values.
+        // and item attributes from the editor are the values.
         ContentValues values = new ContentValues();
-        values.put(InventoryContract.InventoryEntry.COLUMN_ITEM_PRODUCT, productString);
-        // values.put(InventoryContract.InventoryEntry.COLUMN_ITEM_PRICE, breedString);
-        values.put(InventoryContract.InventoryEntry.COLUMN_ITEM_SUPPLIER, supplierString);
+        values.put(InventoryEntry.COLUMN_ITEM_PRODUCT, productString);
+        values.put(InventoryEntry.COLUMN_ITEM_SUPPLIER, supplierString);
+        values.put(InventoryEntry.COLUMN_ITEM_SUPPLIER_NUMBER, supplierNumberString);
 
         int price = 0;
         int quantity = 0;
@@ -210,11 +214,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(InventoryContract.InventoryEntry.COLUMN_ITEM_PRICE, price);
         values.put(InventoryContract.InventoryEntry.COLUMN_ITEM_QUANTITY, quantity);
 
-        // Determine if this is a new or existing pet by checking if mCurrentPetUri is null or not
+        // Determine if this is a new or existing item by checking if mCurrentPetUri is null or not
         if (mCurrentItemUri == null) {
-            // This is a NEW pet, so insert a new pet into the provider,
-            // returning the content URI for the new pet.
-            Uri newUri = getContentResolver().insert(InventoryContract.InventoryEntry.CONTENT_URI, values);
+            // This is a NEW item, so insert a new item into the provider,
+            // returning the content URI for the new item.
+            Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
 
             // Show a toast message depending on whether or not the insertion was successful.
             if (newUri == null) {
@@ -227,9 +231,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                         Toast.LENGTH_SHORT).show();
             }
         } else {
-            // Otherwise this is an EXISTING pet, so update the pet with content URI: mCurrentPetUri
+            // Otherwise this is an EXISTING item, so update the item with content URI: mCurrentItemUri
             // and pass in the new ContentValues. Pass in null for the selection and selection args
-            // because mCurrentPetUri will already identify the correct row in the database that
+            // because mCurrentItemUri will already identify the correct row in the database that
             // we want to modify.
             int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
 
@@ -383,7 +387,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 InventoryEntry.COLUMN_ITEM_PRODUCT,
                 InventoryEntry.COLUMN_ITEM_PRICE,
                 InventoryEntry.COLUMN_ITEM_QUANTITY,
-                InventoryEntry.COLUMN_ITEM_SUPPLIER};
+                InventoryEntry.COLUMN_ITEM_SUPPLIER,
+                InventoryEntry.COLUMN_ITEM_SUPPLIER_NUMBER};
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
@@ -407,18 +412,21 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_ITEM_PRICE);
             int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_ITEM_QUANTITY);
             int supplierColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_ITEM_SUPPLIER);
+            int supplierNumberColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_ITEM_SUPPLIER_NUMBER);
 
             // Extract out the value from the Cursor for the given column index
             String name = cursor.getString(productColumnIndex);
             int price = cursor.getInt(priceColumnIndex);
             int quantity = cursor.getInt(quantityColumnIndex);
             String supplier = cursor.getString(supplierColumnIndex);
+            String supplierNumber = cursor.getString(supplierNumberColumnIndex);
 
             // Update the views on the screen with the values from the database
             mProductEditText.setText(name);
             mPriceEditText.setText(Integer.toString(price));
             mQuantityTextView.setText(Integer.toString(quantity));
             mSupplierEditText.setText(supplier);
+            mSupplierNumberEditText.setText(supplierNumber);
         }
     }
 
@@ -429,6 +437,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPriceEditText.setText("");
         mQuantityTextView.setText("");
         mSupplierEditText.setText("");
+        mSupplierNumberEditText.setText("");
     }
 
     /**

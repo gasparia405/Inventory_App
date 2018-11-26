@@ -100,6 +100,13 @@
                 style="@style/EditorFieldStyle"
                 android:hint="@string/hint_product_supplier_name"
                 android:inputType="textCapWords"/>
+
+            <EditText
+                android:id="@+id/edit_product_supplier_number"
+                style="@style/EditorFieldStyle"
+                android:hint="@string/hint_product_supplier_number"
+                android:inputType="textCapWords"/>
+
         </LinearLayout>
     </LinearLayout>
 

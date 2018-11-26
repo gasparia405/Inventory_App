@@ -41,6 +41,9 @@
     <!-- Text hint for Price field in the editor [CHAR LIMIT=30] -->
     <string name="hint_product_supplier_name">Supplier Name</string>
 
+    <!-- Text hint for Price field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_product_supplier_number">Supplier Number</string>
+
     <!-- Toast message in editor when new pet has been successfully inserted [CHAR LIMIT=NONE] -->
     <string name="editor_insert_item_successful">Item saved</string>
 
