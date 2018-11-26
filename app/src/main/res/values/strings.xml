@@ -88,4 +88,6 @@
 
     <string name="decrement_quantity_error">Item quantity can\'t go lower</string>
 
+    <string name="null_value_error">Fields can\'t be null, please enter values for all fields</string>
+
 </resources>

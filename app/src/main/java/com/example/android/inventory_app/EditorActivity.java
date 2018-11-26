@@ -22,7 +22,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.inventory_app.sampledata.InventoryContract;
@@ -191,6 +190,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             return;
         }
 
+        // If any input values are null, inform user of error and return early
+        if (TextUtils.isEmpty(productString) ||
+                TextUtils.isEmpty(priceString) || TextUtils.isEmpty(quantityString) ||
+                TextUtils.isEmpty(supplierString) || TextUtils.isEmpty(supplierNumberString)) {
+            Toast.makeText(getApplicationContext(), R.string.null_value_error, Toast.LENGTH_LONG).show();
+            return;
+        }
+
         // Create a ContentValues object where column names are the keys,
         // and item attributes from the editor are the values.
         ContentValues values = new ContentValues();
@@ -198,18 +205,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(InventoryEntry.COLUMN_ITEM_SUPPLIER, supplierString);
         values.put(InventoryEntry.COLUMN_ITEM_SUPPLIER_NUMBER, supplierNumberString);
 
-        int price = 0;
-        int quantity = 0;
+        int price = Integer.parseInt(priceString);
 
-        if (!TextUtils.isEmpty(priceString) && !TextUtils.isEmpty(quantityString)) {
-            price = Integer.parseInt(priceString);
-
-            quantity = Integer.parseInt(quantityString);
-        } else if (!TextUtils.isEmpty(priceString)) {
-            price = Integer.parseInt(priceString);
-        } else if (!TextUtils.isEmpty(quantityString)) {
-            quantity = Integer.parseInt(quantityString);
-        }
+        int quantity = Integer.parseInt(quantityString);
 
         values.put(InventoryContract.InventoryEntry.COLUMN_ITEM_PRICE, price);
         values.put(InventoryContract.InventoryEntry.COLUMN_ITEM_QUANTITY, quantity);
@@ -264,10 +262,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             case R.id.action_deleter:
                 // Show delete confirmation dialog
                 showDeleteConfirmationDialog();
-
-                deleteItem();
-
-                finish();
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
@@ -330,17 +324,18 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+
     }
 
     /**
-     * Perform the deletion of the pet in the database.
+     * Perform the deletion of the item in the database.
      */
     private void deleteItem() {
-        // Only perform the delete if this is an existing pet.
+        // Only perform the delete if this is an existing item.
         if (mCurrentItemUri != null) {
-            // Call the ContentResolver to delete the pet at the given content URI.
-            // Pass in null for the selection and selection args because the mCurrentPetUri
-            // content URI already identifies the pet that we want.
+            // Call the ContentResolver to delete the item at the given content URI.
+            // Pass in null for the selection and selection args because the mCurrentItemUri
+            // content URI already identifies the item that we want.
             int rowsDeleted = getContentResolver().delete(mCurrentItemUri, null, null);
 
             // Show a toast message depending on whether or not the delete was successful.
@@ -354,6 +349,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                         Toast.LENGTH_SHORT).show();
             }
         }
+
+        // Finish activity
+        finish();
     }
 
     @Override
@@ -407,7 +405,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
 
         if (cursor.moveToFirst()) {
-            // Find the columns of pet attributes that we're interested in
+            // Find the columns of item attributes that we're interested in
             int productColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_ITEM_PRODUCT);
             int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_ITEM_PRICE);
             int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_ITEM_QUANTITY);
