@@ -39,7 +39,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     /** EditText field to enter the item's quantity */
     private LinearLayout mQuantityContainer;
 
-    private TextView mQuantityTextView;
+    private EditText mQuantityEditText;
 
     private int mQuantity = 0;
 
@@ -93,7 +93,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mProductEditText = (EditText) findViewById(R.id.edit_product_name);
         mPriceEditText = (EditText) findViewById(R.id.edit_product_price);
         mQuantityContainer = (LinearLayout) findViewById(R.id.quantity_container);
-        mQuantityTextView = (TextView) findViewById(R.id.product_quantity);
+        mQuantityEditText = (EditText) findViewById(R.id.product_quantity);
 
         mAddButton = (Button) findViewById(R.id.add_button);
         mAddButton.setText("+");
@@ -116,7 +116,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String productQuantityString = mQuantityTextView.getText().toString();
+                String productQuantityString = mQuantityEditText.getText().toString();
                 final int productQuantity;
 
                 if (productQuantityString != "") {
@@ -125,14 +125,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     productQuantity = 0;
                 }
 
-                if (mQuantityTextView == null) {
+                if (mQuantityEditText == null) {
                     mQuantity = 0;
                     mQuantity = incrementQuantity(mQuantity);
-                    mQuantityTextView.setText(String.valueOf(mQuantity));
+                    mQuantityEditText.setText(String.valueOf(mQuantity));
                 } else {
                     mQuantity = productQuantity;
                     mQuantity = incrementQuantity(mQuantity);
-                    mQuantityTextView.setText(String.valueOf(mQuantity));
+                    mQuantityEditText.setText(String.valueOf(mQuantity));
                 }
             }
         });
@@ -140,7 +140,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSubtractButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String productQuantityString = mQuantityTextView.getText().toString();
+                String productQuantityString = mQuantityEditText.getText().toString();
                 final int productQuantity;
 
                 if (productQuantityString != "") {
@@ -149,10 +149,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     productQuantity = 0;
                 }
 
-                if (mQuantityTextView == null) {
+                if (mQuantityEditText == null) {
                     mQuantity = 0;
                     mQuantity = decrementQuantity(mQuantity);
-                    mQuantityTextView.setText(String.valueOf(mQuantity));
+                    mQuantityEditText.setText(String.valueOf(mQuantity));
                 } else if (productQuantity == 0) {
                     Toast.makeText(getApplicationContext(),
                             R.string.decrement_quantity_error,
@@ -160,7 +160,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 } else {
                     mQuantity = productQuantity;
                     mQuantity = decrementQuantity(mQuantity);
-                    mQuantityTextView.setText(String.valueOf(mQuantity));
+                    mQuantityEditText.setText(String.valueOf(mQuantity));
                 }
             }
         });
@@ -176,7 +176,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private void saveItem() {
         String productString = mProductEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
-        String quantityString = mQuantityTextView.getText().toString().trim();
+        String quantityString = mQuantityEditText.getText().toString().trim();
         String supplierString = mSupplierEditText.getText().toString().trim();
         String supplierNumberString = mSupplierNumberEditText.getText().toString().trim();
 
@@ -424,7 +424,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Update the views on the screen with the values from the database
             mProductEditText.setText(name);
             mPriceEditText.setText(Integer.toString(price));
-            mQuantityTextView.setText(Integer.toString(quantity));
+            mQuantityEditText.setText(Integer.toString(quantity));
             mSupplierEditText.setText(supplier);
             mSupplierNumberEditText.setText(supplierNumber);
         }
@@ -435,7 +435,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // If the loader is invalidated, clear out all the data from the input fields.
         mProductEditText.setText("");
         mPriceEditText.setText("");
-        mQuantityTextView.setText("");
+        mQuantityEditText.setText("");
         mSupplierEditText.setText("");
         mSupplierNumberEditText.setText("");
     }
