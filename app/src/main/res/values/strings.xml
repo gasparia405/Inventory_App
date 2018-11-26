@@ -81,6 +81,8 @@
 
     <string name="sale_button">Sale</string>
 
+    <string name="order_text">Order</string>
+
     <string name="decrement_quantity_error">Item quantity can\'t go lower</string>
 
 </resources>

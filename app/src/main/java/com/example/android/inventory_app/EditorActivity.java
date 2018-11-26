@@ -148,6 +148,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     mQuantity = 0;
                     mQuantity = decrementQuantity(mQuantity);
                     mQuantityTextView.setText(String.valueOf(mQuantity));
+                } else if (productQuantity == 0) {
+                    Toast.makeText(getApplicationContext(),
+                            R.string.decrement_quantity_error,
+                            Toast.LENGTH_SHORT).show();
                 } else {
                     mQuantity = productQuantity;
                     mQuantity = decrementQuantity(mQuantity);

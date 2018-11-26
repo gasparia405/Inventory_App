@@ -78,6 +78,20 @@ public class InventoryCursorAdapter extends CursorAdapter {
                 decreaseQuantity(context, Integer.valueOf(col), Integer.valueOf(quan));
             }
         });
+
+        Button orderButton = (Button) view.findViewById(R.id.order_button);
+        orderButton.setText(R.string.order_text);
+        orderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int supplierNumberIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_ITEM_SUPPLIER_NUMBER);
+                String number = String.format("%s%s", "tel:", cursor.getString(supplierNumberIndex));
+
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse(number));
+                context.startActivity(intent);
+            }
+        });
     }
 
     private void decreaseQuantity(Context context, int columnId, int quantity) {
